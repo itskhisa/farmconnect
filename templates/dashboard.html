@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - FarmConnect{% endblock %}
+
+{% block content %}
+<h1>Welcome back, {{ user.name }}! 👋</h1>
+
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-value">KSh {{ "{:,}".format(total_revenue) }}</div>
+        <div class="stat-label">Total Revenue</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">KSh {{ "{:,}".format(total_expenses) }}</div>
+        <div class="stat-label">Expenses</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ total_crops }}</div>
+        <div class="stat-label">Active Crops</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value" style="color: {% if net_income >= 0 %}#2e7d32{% else %}#d32f2f{% endif %}">
+            KSh {{ "{:,}".format(net_income) }}
+        </div>
+        <div class="stat-label">Net Income</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Recent Crops</h2>
+    {% if crops %}
+    <table>
+        <tr>
+            <th>Crop</th>
+            <th>Variety</th>
+            <th>Area (acres)</th>
+            <th>Planted</th>
+        </tr>
+        {% for crop in crops %}
+        <tr>
+            <td>{{ crop.crop_type }}</td>
+            <td>{{ crop.variety }}</td>
+            <td>{{ crop.area }}</td>
+            <td>{{ crop.planted_date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No crops yet. <a href="/farm?tab=crops">Add your first crop</a></p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Register - FarmConnect{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 50px auto;">
+    <div class="card">
+        <h2 style="text-align: center; margin-bottom: 20px;">Create Account</h2>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phone" placeholder="07XXXXXXXX" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="Your name" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Min 6 characters" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" id="confirm" placeholder="Re-enter password" required>
+            </div>
+            
+            <div id="error" class="error"></div>
+            
+            <button type="submit" class="btn" style="width: 100%;">Create Account</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 20px;">
+            Have an account? <a href="/login">Login</a>
+        </p>
+    </div>
+</div>
+
+<script>
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('phone').value;
+    const name = document.getElementById('name').value;
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirm').value;
+    const errorDiv = document.getElementById('error');
+    
+    if (password !== confirm) {
+        errorDiv.textContent = 'Passwords do not match';
+        return;
+    }
+    
+    const response = await fetch('/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({phone, name, password})
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+        window.location.href = data.redirect;
+    } else {
+        errorDiv.textContent = data.error;
+    }
+});
+</script>
+{% endblock %}

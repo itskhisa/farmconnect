@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Login - FarmConnect{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 100px auto;">
+    <div class="card">
+        <h2 style="text-align: center; margin-bottom: 20px;">Login to FarmConnect</h2>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phone" placeholder="07XXXXXXXX" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+            
+            <div id="error" class="error"></div>
+            
+            <button type="submit" class="btn" style="width: 100%;">Login</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 20px;">
+            Don't have an account? <a href="/register">Register</a>
+        </p>
+    </div>
+</div>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    const errorDiv = document.getElementById('error');
+    
+    const response = await fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({phone, password})
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+        window.location.href = data.redirect;
+    } else {
+        errorDiv.textContent = data.error;
+    }
+});
+</script>
+{% endblock %}
